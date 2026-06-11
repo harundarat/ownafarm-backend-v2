@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS ownafarm_core;
+CREATE DATABASE IF NOT EXISTS ownafarm_chain_events;
