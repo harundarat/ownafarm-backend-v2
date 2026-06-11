@@ -1,9 +1,13 @@
 {
   "name": "ownafarm-backend-v2",
+  "private": true,
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "pnpm --filter api dev",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint"
   },
   "author": "Harun Al Rasyid",
   "license": "MIT",
@@ -13,9 +17,10 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.5.2",
+      "version": "11.5.3",
       "onFail": "download"
     }
   },
-  "type": "module"
+  "type": "module",
+  "packageManager": "pnpm@11.5.3"
 }
