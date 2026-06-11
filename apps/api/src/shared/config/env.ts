@@ -13,7 +13,7 @@ const parsed = schema.safeParse(process.env);
 if (!parsed.success) {
   console.error(
     "invalid environment variables: ",
-    z.treeifyError(parsed.error),
+    z.prettifyError(parsed.error),
   );
   process.exit(1);
 }
