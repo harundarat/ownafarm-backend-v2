@@ -15,7 +15,7 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      # - run: pnpm --filter ownafarm-api exec prisma generate
+      - run: pnpm --filter ownafarm-api exec prisma generate
       - run: pnpm --filter ownafarm-api typecheck
       - run: pnpm --filter ownafarm-api lint
       - run: pnpm --filter ownafarm-api test
