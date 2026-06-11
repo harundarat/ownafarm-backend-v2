@@ -22,3 +22,12 @@ clean:
 
 api-dev:
 	cd apps/api && pnpm dev
+
+api-test:
+	cd apps/api && pnpm test
+
+api-typecheck:
+	cd apps/api && pnpm typecheck
+
+api-lint:
+	cd apps/api && pnpm lint
