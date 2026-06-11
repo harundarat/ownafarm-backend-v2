@@ -1,0 +1,24 @@
+name: CI
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # - run: pnpm --filter ownafarm-api exec prisma generate
+      - run: pnpm --filter ownafarm-api typecheck
+      - run: pnpm --filter ownafarm-api lint
+      - run: pnpm --filter ownafarm-api test
+        env:
+          DATABASE_URL: mysql://root:root@localhost:3306/ownafarm_core
+          REDIS_URL: redis://localhost:6379
