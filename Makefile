@@ -15,7 +15,10 @@ ps:
 	$(COMPOSE) ps
 
 restart:
-	down up
+	$(COMPOSE) down && $(COMPOSE) up -d
 
 clean:
 	$(COMPOSE) down -v
+
+api-dev:
+	cd apps/api && pnpm dev
