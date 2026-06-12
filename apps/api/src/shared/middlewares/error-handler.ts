@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { AppError } from "../errors/app-error.js";
 import { logger } from "../logger/logger.js";
+import { ZodError, z } from "zod";
 
 export function errorHandler(
   err: unknown,
@@ -8,6 +9,19 @@ export function errorHandler(
   res: Response,
   _next: NextFunction,
 ) {
+  if (err instanceof ZodError) {
+    res
+      .status(400)
+      .json({
+        error: {
+          code: "VALIDATION_ERROR",
+          message: "Invalid request",
+          details: z.treeifyError(err),
+        },
+      });
+    return;
+  }
+
   if (err instanceof AppError) {
     res
       .status(err.statusCode)
@@ -16,12 +30,10 @@ export function errorHandler(
   }
 
   logger.error({ err }, "unhandled error");
-  res
-    .status(500)
-    .json({
-      error: {
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Internal server error",
-      },
-    });
+  res.status(500).json({
+    error: {
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Internal server error",
+    },
+  });
 }

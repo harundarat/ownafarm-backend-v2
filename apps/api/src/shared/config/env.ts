@@ -7,6 +7,7 @@ const schema = z.object({
   PORT: z.coerce.number().default(3000),
   DATABASE_URL: z.url(),
   REDIS_URL: z.url(),
+  JWT_SECRET: z.string().min(32, "JWT SECRET must be atleast 32 characters long")
 });
 
 const parsed = schema.safeParse(process.env);
