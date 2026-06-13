@@ -33,7 +33,7 @@ Three rules govern the system:
 |---|---|---|
 | **1 — Core API (TypeScript)** | Express 5 API, auth (argon2id + JWT), wallets, farm offerings, investment intents (optimistic locking), portfolio read model, CI | 🟡 In progress |
 | **2 — Event Processing (Go)** | `chain-events` webhook ingestion, SQS via LocalStack, `worker` with worker pool + pessimistic locking + idempotency | ⚪ Planned |
-| **3 — Production-like Polish** | gRPC transaction tracking, payout/yield, reconciliation, MinIO report storage, Grafana/Prometheus/Loki | ⚪ Planned |
+| **3 — Production-like Polish** | gRPC transaction tracking, payout/yield, reconciliation, Cloudflare R2 report storage (S3-compatible), Grafana/Prometheus/Loki | ⚪ Planned |
 
 ## Tech Stack
 
@@ -43,6 +43,7 @@ Three rules govern the system:
 | Event services *(Phase 2)* | Go, gRPC, AWS SQS (LocalStack for local dev) |
 | Database | MySQL 9.7 LTS (Decimal money types, UUIDv7 keys) |
 | Cache / locks | Redis 8.8 |
+| Object storage *(Phase 3)* | Cloudflare R2 (S3-compatible) |
 | Testing | Vitest, Supertest |
 | Tooling | pnpm workspaces, Docker Compose, GitHub Actions, Makefile |
 
@@ -107,8 +108,8 @@ Defined and validated fail-fast at boot via Zod (`apps/api/src/shared/config/env
 | Method | Path | Description |
 |---|---|---|
 | `GET` | `/health` | Liveness check |
-| `POST` | `/api/v1/auth/register` | Create an account (argon2id-hashed password) |
-| `POST` | `/api/v1/auth/login` | Obtain a JWT access token |
+| `POST` | `/api/auth/register` | Create an account (argon2id-hashed password) |
+| `POST` | `/api/auth/login` | Obtain a JWT access token |
 
 ## Project Structure
 
