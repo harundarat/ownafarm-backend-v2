@@ -23,6 +23,3 @@ jobs:
       - run: pnpm --filter ownafarm-api typecheck
       - run: pnpm --filter ownafarm-api lint
       - run: pnpm --filter ownafarm-api test
-        env:
-          DATABASE_URL: mysql://root:root@localhost:3306/ownafarm_core
-          REDIS_URL: redis://localhost:6379
