@@ -20,6 +20,9 @@ restart:
 clean:
 	$(COMPOSE) down -v
 
+api-migrate:
+	cd apps/api && pnpm exec prisma migrate dev
+
 api-dev:
 	cd apps/api && pnpm dev
 
