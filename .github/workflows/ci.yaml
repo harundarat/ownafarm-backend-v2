@@ -7,6 +7,10 @@ on:
 jobs:
   api:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: mysql://root:root@localhost:3306/ownafarm_core
+      REDIS_URL: redis://localhost:6379
+      JWT_SECRET: "must be at least 32 characters long"
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
