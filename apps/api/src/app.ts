@@ -4,6 +4,7 @@ import { pinoHttp } from "pino-http";
 import { logger } from "./shared/logger/logger.js";
 import { errorHandler } from "./shared/middlewares/error-handler.js";
 import { authRoutes } from "./modules/auth/index.js";
+import { walletRoutes } from "./modules/wallet/index.js";
 
 export const app = express();
 
@@ -15,5 +16,6 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/wallets", walletRoutes);
 
 app.use(errorHandler);

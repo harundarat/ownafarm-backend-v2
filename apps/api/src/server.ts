@@ -3,9 +3,9 @@ import { app } from "./app.js";
 import { env } from "./shared/config/env.js";
 import { logger } from "./shared/logger/logger.js";
 import { prisma } from "./shared/database/prisma.js";
-import { redis } from "./shared/cache/redis.js";
+import { connectRedis, redis } from "./shared/cache/redis.js";
 
-await redis.connect();
+await connectRedis();
 
 const server = app.listen(env.PORT, () => {
   logger.info({ port: env.PORT }, "ownafarm-api listening");
