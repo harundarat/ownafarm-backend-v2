@@ -24,13 +24,14 @@ model User {
 }
 
 model Wallet {
-  id        String   @id @default(uuid(7))
-  userId    String   @map("user_id")
-  chainId   Int      @map("chain_id")
-  address   String
-  label     String?
-  createdAt DateTime @default(now()) @map("created_at")
-  user      User     @relation(fields: [userId], references: [id])
+  id         String    @id @default(uuid(7))
+  userId     String    @map("user_id")
+  chainId    Int       @map("chain_id")
+  address    String
+  label      String?
+  verifiedAt DateTime? @map("verified_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  user       User      @relation(fields: [userId], references: [id])
 
   @@unique([chainId, address])
   @@index([userId])
