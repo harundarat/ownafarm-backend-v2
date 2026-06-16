@@ -11,6 +11,9 @@ jobs:
       DATABASE_URL: mysql://root:root@localhost:3306/ownafarm_core
       REDIS_URL: redis://localhost:6379
       JWT_SECRET: "must be at least 32 characters long"
+      SMTP_USER: ci@example.com
+      SMTP_PASS: ci-smtp-password
+      SMTP_FROM: "CI <ci@example.com>"
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
