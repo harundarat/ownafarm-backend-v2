@@ -7,7 +7,12 @@ const schema = z.object({
   PORT: z.coerce.number().default(3000),
   DATABASE_URL: z.url(),
   REDIS_URL: z.url(),
-  JWT_SECRET: z.string().min(32, "JWT SECRET must be atleast 32 characters long")
+  JWT_SECRET: z.string().min(32, "JWT SECRET must be atleast 32 characters long"),
+  SMTP_HOST: z.string().default("smtp.gmail.com"),
+  SMTP_PORT: z.coerce.number().default(587),
+  SMTP_USER: z.email(),
+  SMTP_PASS: z.string().min(1),
+  SMTP_FROM: z.string().min(1),
 });
 
 const parsed = schema.safeParse(process.env);
