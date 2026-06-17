@@ -5,6 +5,7 @@ import { env } from "../config/env.js";
 
 interface JwtPayload {
   sub: string;
+  role: "investor" | "farmer";
 }
 
 export function requireAuth(
@@ -26,6 +27,7 @@ export function requireAuth(
   try {
     const payload = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
     req.userId = payload.sub;
+    req.userRole = payload.role;
     next();
   } catch {
     throw new AppError("Invalid or expire token", 401, "UNAUTHORIZED");

@@ -9,7 +9,7 @@ import type { LoginInput, RegisterInput } from "./auth.schema.js";
 export class AuthService {
   constructor(private readonly authRepository: AuthRepository) {}
 
-  async register(input: RegisterInput): Promise<{ id: string; email: string }> {
+  async register(input: RegisterInput): Promise<{ id: string; email: string; role: string }> {
     const existing = await this.authRepository.findByEmail(input.email);
     if (existing) {
       throw new AppError("Email already registered", 409, "EMAIL_TAKEN");
@@ -21,9 +21,10 @@ export class AuthService {
       const user = await this.authRepository.createUser({
         email: input.email,
         passwordHash,
+        role: input.role,
       });
 
-      return { id: user.id, email: user.email };
+      return { id: user.id, email: user.email, role: user.role };
     } catch (err) {
       if (
         err instanceof Prisma.PrismaClientKnownRequestError &&
@@ -55,7 +56,7 @@ export class AuthService {
       );
     }
 
-    const accessToken = jwt.sign({ sub: user.id }, env.JWT_SECRET, {
+    const accessToken = jwt.sign({ sub: user.id, role: user.role }, env.JWT_SECRET, {
       expiresIn: "15m",
     });
     return { accessToken };
