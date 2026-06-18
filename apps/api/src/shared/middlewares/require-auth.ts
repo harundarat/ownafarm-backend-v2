@@ -26,10 +26,14 @@ export function requireAuth(
   const token = header.slice("Bearer ".length);
   try {
     const payload = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+    if (payload.role !== "investor" && payload.role !== "farmer") {
+      throw new AppError("Invalid or expired token", 401, "UNAUTHORIZED");
+    }
     req.userId = payload.sub;
     req.userRole = payload.role;
     next();
-  } catch {
-    throw new AppError("Invalid or expire token", 401, "UNAUTHORIZED");
+  } catch (err) {
+    if (err instanceof AppError) throw err;
+    throw new AppError("Invalid or expired token", 401, "UNAUTHORIZED");
   }
 }

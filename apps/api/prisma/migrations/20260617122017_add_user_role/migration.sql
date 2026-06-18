@@ -5,4 +5,5 @@
 
 */
 -- AlterTable
-ALTER TABLE `users` ADD COLUMN `role` ENUM('investor', 'farmer') NOT NULL;
+ALTER TABLE `users` ADD COLUMN `role` ENUM('investor', 'farmer') NOT NULL DEFAULT 'investor';
+ALTER TABLE `users` ALTER COLUMN `role` DROP DEFAULT;

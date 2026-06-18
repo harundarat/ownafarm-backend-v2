@@ -1,4 +1,8 @@
-import type { PrismaClient, User, UserRole } from "../../generated/prisma/client.js";
+import type {
+  PrismaClient,
+  User,
+  UserRole,
+} from "../../generated/prisma/client.js";
 
 export class AuthRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -7,7 +11,11 @@ export class AuthRepository {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
-  createUser(data: { email: string; passwordHash: string; role: UserRole }): Promise<User> {
+  createUser(data: {
+    email: string;
+    passwordHash: string;
+    role: UserRole;
+  }): Promise<User> {
     return this.prisma.user.create({ data });
   }
 }
