@@ -10,15 +10,13 @@ export function errorHandler(
   _next: NextFunction,
 ) {
   if (err instanceof ZodError) {
-    res
-      .status(400)
-      .json({
-        error: {
-          code: "VALIDATION_ERROR",
-          message: "Invalid request",
-          details: z.treeifyError(err),
-        },
-      });
+    res.status(400).json({
+      error: {
+        code: "VALIDATION_ERROR",
+        message: "Invalid request",
+        details: z.treeifyError(err),
+      },
+    });
     return;
   }
 

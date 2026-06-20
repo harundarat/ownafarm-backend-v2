@@ -17,14 +17,30 @@ enum UserRole {
   farmer
 }
 
+enum DocumentType {
+  id_card_front
+  id_card_back
+  selfie
+  npwp
+  land_certificate
+  family_card
+}
+
+enum DocumentStatus {
+  pending
+  approved
+  rejected
+}
+
 model User {
-  id           String   @id @default(uuid(7))
-  email        String   @unique
-  passwordHash String   @map("password_hash")
-  role         UserRole
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  wallets      Wallet[]
+  id            String         @id @default(uuid(7))
+  email         String         @unique
+  passwordHash  String         @map("password_hash")
+  role          UserRole
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  wallets       Wallet[]
+  userDocuments UserDocument[]
 
   @@map("users")
 }
@@ -42,4 +58,21 @@ model Wallet {
   @@unique([chainId, address])
   @@index([userId])
   @@map("wallets")
+}
+
+model UserDocument {
+  id           String         @id @default(uuid(7))
+  userId       String         @map("user_id")
+  type         DocumentType
+  storageKey   String         @map("storage_key")
+  status       DocumentStatus @default(pending)
+  rejectReason String?        @map("reject_reason")
+  reviewedAt   DateTime?      @map("reviewed_at")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, status])
+  @@map("user_documents")
 }

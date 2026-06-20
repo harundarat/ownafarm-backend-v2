@@ -1,5 +1,10 @@
 import type { Request, Response } from "express";
-import { loginSchema, registerSchema, sendOtpSchema, verifyOtpSchema } from "./auth.schema.js";
+import {
+  loginSchema,
+  registerSchema,
+  sendOtpSchema,
+  verifyOtpSchema,
+} from "./auth.schema.js";
 import type { AuthService } from "./auth.service.js";
 
 export class AuthController {
