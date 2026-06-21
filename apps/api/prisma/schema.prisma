@@ -41,6 +41,7 @@ model User {
   updatedAt     DateTime       @updatedAt @map("updated_at")
   wallets       Wallet[]
   userDocuments UserDocument[]
+  farms         Farm[]
 
   @@map("users")
 }
@@ -75,4 +76,121 @@ model UserDocument {
   @@index([userId])
   @@index([userId, status])
   @@map("user_documents")
+}
+
+enum FarmCategory {
+  plantation
+  livestock
+}
+
+enum FarmStatus {
+  draft
+  pending_review
+  funding
+  operating
+  completed
+  cancelled
+}
+
+enum CameraStatus {
+  online
+  offline
+  maintenance
+}
+
+model Farm {
+  id          String       @id @default(uuid(7))
+  ownerId     String       @map("owner_id")
+  category    FarmCategory
+  name        String
+  slug        String       @unique
+  description String?
+  status      FarmStatus   @default(draft)
+
+  province  String?
+  regency   String?
+  district  String?
+  latitude  Decimal? @db.Decimal(10, 7)
+  longitude Decimal? @db.Decimal(10, 7)
+
+  currency       String    @default("USDC")
+  fundingTarget  Decimal   @map("funding_target") @db.Decimal(18, 6)
+  fundingRaised  Decimal   @default(0) @map("funding_raised") @db.Decimal(18, 6)
+  minInvestment  Decimal?  @map("min_investment") @db.Decimal(18, 6)
+  roiEstimatePct Decimal?  @map("roi_estimate_pct") @db.Decimal(5, 2)
+  tenorDays      Int?      @map("tenor_days")
+  fundingStartAt DateTime? @map("funding_start_at")
+  fundingEndAt   DateTime? @map("funding_end_at")
+
+  chainId         Int?    @map("chain_id")
+  contractAddress String? @map("contract_address")
+
+  coverImageKey String?  @map("cover_image_key")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  owner      User            @relation(fields: [ownerId], references: [id])
+  plantation FarmPlantation?
+  livestock  FarmLivestock?
+  cameras    FarmCamera[]
+  images     FarmImage[]
+
+  @@index([ownerId])
+  @@index([category, status])
+  @@map("farms")
+}
+
+model FarmPlantation {
+  farmId           String    @id @map("farm_id")
+  commodity        String
+  varietal         String?
+  areaHectares     Decimal?  @map("area_hectares") @db.Decimal(12, 2)
+  plantedAt        DateTime? @map("planted_at")
+  harvestCycleDays Int?      @map("harvest_cycle_days")
+  farm             Farm      @relation(fields: [farmId], references: [id], onDelete: Cascade)
+
+  @@map("farm_plantations")
+}
+
+model FarmLivestock {
+  farmId     String  @id @map("farm_id")
+  animalType String  @map("animal_type")
+  breed      String?
+  headcount  Int?
+  cycleDays  Int?    @map("cycle_days")
+  farm       Farm    @relation(fields: [farmId], references: [id], onDelete: Cascade)
+
+  @@map("farm_livestock")
+}
+
+model FarmCamera {
+  id           String       @id @default(uuid(7))
+  farmId       String       @map("farm_id")
+  name         String
+  provider     String
+  streamKey    String       @map("stream_key")
+  protocol     String?
+  status       CameraStatus @default(offline)
+  isPublic     Boolean      @default(false) @map("is_public")
+  thumbnailKey String?      @map("thumbnail_key")
+  lastSeenAt   DateTime?    @map("last_seen_at")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  farm         Farm         @relation(fields: [farmId], references: [id], onDelete: Cascade)
+
+  @@index([farmId])
+  @@map("farm_cameras")
+}
+
+model FarmImage {
+  id         String   @id @default(uuid(7))
+  farmId     String   @map("farm_id")
+  storageKey String   @map("storage_key")
+  caption    String?
+  sortOrder  Int      @default(0) @map("sort_order")
+  createdAt  DateTime @default(now()) @map("created_at")
+  farm       Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+
+  @@index([farmId])
+  @@map("farm_images")
 }
